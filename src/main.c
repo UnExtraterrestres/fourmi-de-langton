@@ -2,9 +2,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "fonctions-vie.h"
+#include "fonctions-fourmi.h"
 #include "sig-console.h"
 
+#define NB_TOUR 11500
 
 void afficher_matrice(struct ecran *ecran, struct matrice *matrice)
 {
@@ -45,27 +46,28 @@ int main(int argc, char *argv[])
     int width = get_screen_width();
     int height = get_screen_height();
 
-    long int seed = width*height;
-    if (argc >= 2)
-    {
-        seed = atoi(argv[1]);
-    }
-
     struct ecran *ecran = ecran_create(width, height);
     struct matrice *matrice = matrice_create(ecran->largeur, ecran->hauteur);
+    
+    int mid_x_screen = width / 2;
+    int mid_y_screen = height / 2;
+    int ant[3] = {mid_x_screen, mid_y_screen, 270};
 
-    // Initialisation de la matrice de cellules
-    make_random_matrice(matrice, seed);
+    make_zero_matrice(matrice);
 
     // Boucle principale du jeu de la vie
-    while (3301)
+    long int tour = 0;
+    while (NB_TOUR >= tour)
     {
-        update(matrice);
+        update(matrice, ant);
         afficher_matrice(ecran, matrice);
 
+        // printf("Tour %ld\n", tour);
         // attente pour le prochain tour
         // Ctrl+C pour quitter
-        getchar();
+        // getchar();
+
+        tour++;
     }
 
     free_matrice(matrice);
